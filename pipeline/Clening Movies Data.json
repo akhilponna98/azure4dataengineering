@@ -17,7 +17,12 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "CleanMoviesData",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"Movies": {
+								"FileName": "Movies"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
