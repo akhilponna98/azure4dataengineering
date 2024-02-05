@@ -28,7 +28,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Movies",
-				"Movies derive(Year = trim(right(title, 6), '()')) ~> ExtractingYear"
+				"Movies derive(Year = toString(trim(right(title, 6), '()')),",
+				"          title = ERROR_FUNCTION('')) ~> ExtractingYear"
 			]
 		}
 	}
