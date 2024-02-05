@@ -28,7 +28,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Movies",
-				"Movies derive() ~> ExtractingYear"
+				"Movies derive(Year = right(title, 6)) ~> ExtractingYear"
 			]
 		}
 	}
