@@ -28,9 +28,6 @@
 				}
 			],
 			"scriptLines": [
-				"parameters{",
-				"     parameter1 as string",
-				"}",
 				"source(output(",
 				"          movieId as string,",
 				"          title as string,",
@@ -45,7 +42,8 @@
 				"     validateSchema: false,",
 				"     partitionFileNames:['clean-movies-data.csv'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> OutputCSV"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> OutputCSV"
 			]
 		}
 	}
