@@ -55,20 +55,12 @@
 					"referenceName": "blobcontainer4learning",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"FileName": {
-						"type": "string"
-					}
-				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
+						"fileName": "movies.csv",
 						"container": "input"
 					},
 					"columnDelimiter": ",",
@@ -134,14 +126,17 @@
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Movies"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sqldatabase4learning')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CleanMoviesData')]",
+			"name": "[concat(parameters('factoryName'), '/Movies Cleanup Data Flow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -163,12 +158,18 @@
 								"type": "DatasetReference"
 							},
 							"name": "OutputCSV"
+						},
+						{
+							"dataset": {
+								"referenceName": "SQLTable",
+								"type": "DatasetReference"
+							},
+							"name": "OutputTable"
 						}
 					],
 					"transformations": [
 						{
-							"name": "ExtractingYear",
-							"description": "Extracts the Year of release from title column."
+							"name": "ExtractingYear"
 						}
 					],
 					"scriptLines": [
@@ -180,30 +181,47 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> Movies",
-						"Movies derive(Year = toString(trim(right(title, 6), '()')),",
+						"Movies derive(Year = toInteger(trim(right(title, 6), '()')),",
 						"          title = toString(left(title, length(title)-6))) ~> ExtractingYear",
 						"ExtractingYear sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     partitionFileNames:['clean-movies-data.csv'],",
+						"     partitionFileNames:['cleaned-movies-data.csv'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> OutputCSV"
+						"     partitionBy('hash', 1)) ~> OutputCSV",
+						"ExtractingYear sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          movieId,",
+						"          title,",
+						"          genres,",
+						"          Year",
+						"     )) ~> OutputTable"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/InputCSV')]",
-				"[concat(variables('factoryId'), '/datasets/OutputCSV')]"
+				"[concat(variables('factoryId'), '/datasets/OutputCSV')]",
+				"[concat(variables('factoryId'), '/datasets/SQLTable')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Clening Movies Data')]",
+			"name": "[concat(parameters('factoryName'), '/Movies Data Cleanup Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Movies Data Cleanup",
+						"name": "Movies DataFlow",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -216,14 +234,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "CleanMoviesData",
+								"referenceName": "Movies Cleanup Data Flow",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"Movies": {
-										"FileName": "Movies"
-									},
-									"OutputCSV": {}
+									"Movies": {},
+									"OutputCSV": {},
+									"OutputTable": {}
 								}
 							},
 							"staging": {},
@@ -241,7 +258,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/CleanMoviesData')]"
+				"[concat(variables('factoryId'), '/dataflows/Movies Cleanup Data Flow')]"
 			]
 		}
 	]
