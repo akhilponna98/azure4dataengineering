@@ -15,7 +15,7 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "ExtractingYear"
 				}
 			],
 			"scriptLines": [
@@ -27,7 +27,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Movies",
-				"Movies derive() ~> derivedColumn1"
+				"Movies derive(Year = right(title, 6)) ~> ExtractingYear"
 			]
 		}
 	}
