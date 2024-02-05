@@ -5,20 +5,12 @@
 			"referenceName": "blobcontainer4learning",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"InputFileName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().InputFileName",
-					"type": "Expression"
-				},
+				"fileName": "movies.csv",
 				"container": "input"
 			},
 			"columnDelimiter": ",",
