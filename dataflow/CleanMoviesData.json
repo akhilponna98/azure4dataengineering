@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "MoviesCSV",
+						"referenceName": "InputCSV",
 						"type": "DatasetReference"
 					},
 					"name": "Movies"
