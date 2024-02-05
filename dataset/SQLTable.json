@@ -1,0 +1,12 @@
+{
+	"name": "SQLTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sqldatabase4learning",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
