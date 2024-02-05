@@ -1,5 +1,5 @@
 {
-	"name": "MoviesCSV",
+	"name": "InputCSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "blobcontainer4learning",
