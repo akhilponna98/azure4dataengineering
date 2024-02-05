@@ -55,7 +55,7 @@
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
-				"     upsertable:true,",
+				"     upsertable:false,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
@@ -65,7 +65,8 @@
 				"          title,",
 				"          genres,",
 				"          Year",
-				"     )) ~> OutputTable"
+				"     ),",
+				"     partitionBy('hash', 1)) ~> OutputTable"
 			]
 		}
 	}
