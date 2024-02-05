@@ -44,7 +44,9 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"Movies": {},
+									"Movies": {
+										"FileName": "Movies"
+									},
 									"OutputCSV": {}
 								}
 							},
@@ -67,7 +69,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MoviesCSV')]",
+			"name": "[concat(parameters('factoryName'), '/InputCSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -75,12 +77,20 @@
 					"referenceName": "blobcontainer4learning",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "movies.csv",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
 						"container": "input"
 					},
 					"columnDelimiter": ",",
@@ -188,7 +198,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "MoviesCSV",
+								"referenceName": "InputCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Movies"
@@ -222,13 +232,15 @@
 						"          title = toString(left(title, length(title)-6))) ~> ExtractingYear",
 						"ExtractingYear sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     partitionFileNames:['clean-movies-data.csv'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> OutputCSV"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> OutputCSV"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/MoviesCSV')]",
+				"[concat(variables('factoryId'), '/datasets/InputCSV')]",
 				"[concat(variables('factoryId'), '/datasets/OutputCSV')]"
 			]
 		}
