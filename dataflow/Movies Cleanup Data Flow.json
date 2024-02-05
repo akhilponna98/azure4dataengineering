@@ -27,7 +27,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> Movies",
-				"Movies derive(Year = ERROR_FUNCTION('toString((trim(right(title, 6), __SINGLE_QUOTE__6__SINGLE_QUOTE__))'),",
+				"Movies derive(Year = toString(trim(right(title, 6), '()')),",
 				"          title = left(title, length(title)-6)) ~> ExtractingYear"
 			]
 		}
