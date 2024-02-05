@@ -14,10 +14,18 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"dataset": {
+						"referenceName": "OutputCSV",
+						"type": "DatasetReference"
+					},
+					"name": "OutputCSV"
 				},
 				{
-					"name": "sink2"
+					"dataset": {
+						"referenceName": "SQLTable",
+						"type": "DatasetReference"
+					},
+					"name": "OutputTable"
 				}
 			],
 			"transformations": [
@@ -40,11 +48,17 @@
 				"ExtractingYear sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"     skipDuplicateMapOutputs: true) ~> OutputCSV",
 				"ExtractingYear sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink2"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> OutputTable"
 			]
 		}
 	}
