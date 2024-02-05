@@ -1,0 +1,9 @@
+{
+	"name": "learndataengineering",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "37cd924b-eca5-4455-a3ba-ca46775ca1e1",
+		"tenantId": "ef764c35-1623-429f-8255-94e1aeecce5d"
+	}
+}
