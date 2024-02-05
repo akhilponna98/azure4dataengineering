@@ -21,7 +21,11 @@
 					"name": "OutputCSV"
 				},
 				{
-					"name": "sink2"
+					"dataset": {
+						"referenceName": "SQLTable",
+						"type": "DatasetReference"
+					},
+					"name": "OutputTable"
 				}
 			],
 			"transformations": [
@@ -42,14 +46,20 @@
 				"          title = toString(left(title, length(title)-6))) ~> ExtractingYear",
 				"ExtractingYear sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:[''],",
+				"     partitionFileNames:['cleaned-movies-data.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> OutputCSV",
 				"ExtractingYear sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink2"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> OutputTable"
 			]
 		}
 	}
